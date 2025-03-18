@@ -12,7 +12,7 @@ let currentSong = new Audio();
 let songs;
 let curFolder;
 async function getSongs() {
-    let a = await fetch("http://127.0.0.1:3000/songs/")
+    let a = await fetch("https://spotify-backend-0het.onrender.com/songs/")
     let response = await a.text()
     console.log(response)
     let div = document.createElement("div")
@@ -84,7 +84,7 @@ async function main(){
 }
 
 const playMusic = (track, pause = false) =>{
-    currentSong.src = "/songs/" + track
+    currentSong.src = "https://spotify-backend-0het.onrender.com/songs/" + track
     if(!pause){
         currentSong.play()
         play.src = "icons/pause.svg"
