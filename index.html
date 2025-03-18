@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/utility.css">
+    <title>Spotify - Web Player: Music for everyone</title>
+</head>
+
+<body>
+    <section class="header d-flex justify-between">
+        <div class="logo d-flex">
+            <img src="icons/logo.svg" class="invert" width="34px" alt="Spotify logo">
+        </div>
+        <div class="home-btn">
+            <img src="icons/home.svg" class="invert" width="24px" alt="Home Button">
+        </div>
+        <div class="search-bar">
+            <div class="search-icon">
+                <img src="icons/search.svg" class="invert-secondary" width="20px" alt="Search Icon">
+            </div>
+            <input type="text" class="invert" placeholder="What do you want to play?">
+            <div class="separator"></div>
+            <div class="browse-icon">
+                <img src="icons/browse.svg" width="20px" class="invert-secondary" alt="Browse Icon">
+            </div>
+        </div>
+        <div class="nav">
+            <a href="#">Premium</a>
+            <a href="#">Support</a>
+            <a href="#">Download</a>
+            <div class="separator"></div>
+        </div>
+        <div class="actions">
+            <div class="install-app d-flex">
+                <img src="icons/donwload.svg" class="invert-secondary" width="18px" alt="donwload app">
+                <a href="#">Install app</a>
+            </div>
+            <a href="#">Sign up</a>
+            <div class="log-in">
+                <a href="#">Log in</a>
+            </div>
+        </div>
+    </section>
+    <section class="bottom">
+        <div class="left">
+            <div class="top d-flex">
+                <img src="icons/library.svg" class="invert-secondary" width="28px"  alt="Library icon">
+                <a href="#">Your Library</a>
+            </div>
+            <div class="song-list">
+                <ul>
+                    <li>Song 1</li>
+                    <li>Song 2</li>
+                    <li>Song 3</li>
+                    <li>Song 4</li>
+                    <li>Song 5</li>
+                    <li>Song 6</li>
+                    <li>Song 7</li>
+                    <li>Song 8</li>
+                    <li>Song 9</li>
+                    <li>Song 10</li>
+                    <li>Song 11</li>
+                    <li>Song 12</li>
+                    <li>Song 13</li>
+                    <li>Song 14</li>
+                    <li>Song 15</li>
+                </ul>
+            </div>
+            <div class="library-footer">
+                <a href="https://www.spotify.com/in-en/legal/">Legal</a>
+                <a href="https://www.spotify.com/in-en/safetyandprivacy/">Safety &amp; Privacy Center</a>
+                <a href="https://www.spotify.com/in-en/legal/privacy-policy/">Privacy Policy</a>
+                <a href="https://www.spotify.com/in-en/legal/cookies-policy/">Cookies</a>
+                <a href="https://www.spotify.com/in-en/legal/privacy-policy/#s3">About Ads</a>
+                <a href="https://www.spotify.com/in-en/accessibility/">Accessibility</a>
+            </div>
+        </div>
+        
+        <div class="right border-radius ml0 bg-grey m1">
+            <h2>Spotify Playlists</h2>
+            <div class="playlist-cards d-flex">
+            </div>
+            <div class="playbar">
+                <div class="seekbar">
+                    <div class="circle"></div>
+                </div>
+                <div class="song-bar d-flex">
+                    <div class="songinfo f12"></div>
+                    <div class="song-buttons">
+                        <img width="25" id="previous" class="invert" src="icons/prev-button.svg">
+                        <img width="25" id="play" class="invert" src="icons/play.svg">
+                        <img width="25" id="next" class="invert" src="icons/next-button.svg">
+                    </div>
+                    <div class="timeVolume d-flex">
+                        <div class="song-time f12">
+                        </div>
+                        <!-- <div class="volume">
+                        </div> -->
+                        <div class="range">
+                            <img width="25" class="invert" src="icons/volume.svg">
+                            <input type="range" id="range" name="volume">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+    <script src="js/script.js"></script>
+</body>
+
+</html>
