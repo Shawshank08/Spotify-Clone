@@ -12,20 +12,10 @@ let currentSong = new Audio();
 let songs;
 let curFolder;
 async function getSongs() {
-    let a = await fetch("https://spotify-backend-0het.onrender.com/songs/")
-    let response = await a.text()
-    console.log(response)
-    let div = document.createElement("div")
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a")
-    let songs = []
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index]
-        if(element.href.endsWith(".mp3")){
-            songs.push(element.href.split("/songs/")[1])
-        }
-    }
-    return songs
+    let a = await fetch("https://spotify-backend-0het.onrender.com/songs/");
+    let response = await a.json(); // Assuming the backend returns JSON
+    console.log("Songs fetched:", response); // Log the response
+    return response; // This should be an array of song filenames
 }
 
 async function main(){
