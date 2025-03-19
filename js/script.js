@@ -84,7 +84,12 @@ async function main(){
 }
 
 const playMusic = (track, pause = false) =>{
-    currentSong.src = "https://spotify-backend-0het.onrender.com/songs/" + track
+    currentSong.src = "https://spotify-backend-0het.onrender.com/songs/" + encodeURIComponent(track);
+    currentSong.load();
+    currentSong.addEventListener("error", (e) => {
+        console.error("Error loading audio file:", e);
+    });
+
     if(!pause){
         currentSong.play()
         play.src = "icons/pause.svg"
