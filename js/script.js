@@ -14,17 +14,12 @@ function secondsToMinuteSeconds(seconds) {
 async function getSongs(folder) {
     currFolder = folder;
     let a = await fetch(`https://spotify-backend-0het.onrender.com/${currFolder}`)
-    let response = await a.text()
+    let response = await a.json(); 
     let div = document.createElement("div")
     div.innerHTML = response;
     let as = div.getElementsByTagName("a")
-    songs = []
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index]
-        if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`${currFolder}`)[1])
-        }
-    }
+    songs = response; 
+    console.log("Current Folder:", currFolder);
     let songUL = document.querySelector(".song-list").getElementsByTagName("ul")[0]
     songUL.innerHTML = ""
     for (const song of songs) {
@@ -51,7 +46,11 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
-    currentSong.src = `https://spotify-backend-0het.onrender.com/${currFolder}` + track;
+    if (!currFolder) {
+        console.error("currFolder is undefined");
+        return;
+    }
+    currentSong.src = `https://spotify-backend-0het.onrender.com/${currFolder}/${track}`;
     currentSong.load();
     if (!pause) {
         currentSong.play()
