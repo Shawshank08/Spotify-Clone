@@ -13,46 +13,46 @@ let songs;
 let curFolder;
 async function getSongs() {
     let a = await fetch("https://spotify-backend-0het.onrender.com/songs/");
-    let response = await a.json(); // Assuming the backend returns JSON
+    let response = await a.json(); // Parse the response as JSON
     console.log("Songs fetched:", response); // Log the response
     return response; // This should be an array of song filenames
 }
 
 async function main(){
-    // Get the list of all the songs
-    let songs = await getSongs();
-    console.log("Songs array:", songs); // Log the songs array
+   // Get the list of all the songs
+   let songs = await getSongs();
+   console.log("Songs array:", songs); // Log the songs array
 
-    if (songs.length > 0) {
-        playMusic(songs[0], true); // Play the first song
-    } else {
-        console.error("No songs found.");
-    }
+   if (songs.length > 0) {
+       playMusic(songs[0], true); // Play the first song
+   } else {
+       console.error("No songs found.");
+   }
 
-    // Render the song list
-    let songUL = document.querySelector(".song-list").getElementsByTagName("ul")[0];
-    for (const song of songs) {
-        songUL.innerHTML = songUL.innerHTML + `
-        <li>
-            <img width="20" src="icons/music.svg" class="invert">
-            <div class="info">
-                <div class="f12">${song.replaceAll("%20", " ")}</div>
-            </div>
-            <div class="playnow items-center">
-                <span class="f12">Play Now</span>
-                <img width="20" class="invert" src="icons/play.svg">
-            </div>
-        </li>`;
-    }
+   // Render the song list
+   let songUL = document.querySelector(".song-list").getElementsByTagName("ul")[0];
+   for (const song of songs) {
+       songUL.innerHTML = songUL.innerHTML + `
+       <li>
+           <img width="20" src="icons/music.svg" class="invert">
+           <div class="info">
+               <div class="f12">${song.replaceAll("%20", " ")}</div>
+           </div>
+           <div class="playnow items-center">
+               <span class="f12">Play Now</span>
+               <img width="20" class="invert" src="icons/play.svg">
+           </div>
+       </li>`;
+   }
 
-    // Attach event listeners to each song
-    Array.from(document.querySelector(".song-list").getElementsByTagName("li")).forEach(e => {
-        e.addEventListener("click", () => {
-            const track = e.querySelector(".info").firstElementChild.innerHTML.trim();
-            console.log("Playing track:", track); // Log the track being played
-            playMusic(track);
-        });
-    });
+   // Attach event listeners to each song
+   Array.from(document.querySelector(".song-list").getElementsByTagName("li")).forEach(e => {
+       e.addEventListener("click", () => {
+           const track = e.querySelector(".info").firstElementChild.innerHTML.trim();
+           console.log("Playing track:", track); // Log the track being played
+           playMusic(track);
+       });
+   });
     //Play the first song
     // var audio = new Audio(songs[0])
     // audio.play()
