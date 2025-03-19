@@ -30,11 +30,18 @@ async function getSongs() {
 
 async function main(){
     // Get the list of all the songs
-    let songs = await getSongs()
-    playMusic(songs[0], true)
+    let songs = await getSongs();
+    console.log("Songs array:", songs); // Log the songs array
 
-    let songUL = document.querySelector(".song-list").getElementsByTagName("ul")[0]
-    for(const song of songs){
+    if (songs.length > 0) {
+        playMusic(songs[0], true); // Play the first song
+    } else {
+        console.error("No songs found.");
+    }
+
+    // Render the song list
+    let songUL = document.querySelector(".song-list").getElementsByTagName("ul")[0];
+    for (const song of songs) {
         songUL.innerHTML = songUL.innerHTML + `
         <li>
             <img width="20" src="icons/music.svg" class="invert">
@@ -45,15 +52,17 @@ async function main(){
                 <span class="f12">Play Now</span>
                 <img width="20" class="invert" src="icons/play.svg">
             </div>
-        </li>    `;
+        </li>`;
     }
 
-    //Attach an event listener to each song
-    Array.from(document.querySelector(".song-list").getElementsByTagName("li")).forEach(e=>{
-        e.addEventListener("click", element=>{
-            playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
-        })
-    })
+    // Attach event listeners to each song
+    Array.from(document.querySelector(".song-list").getElementsByTagName("li")).forEach(e => {
+        e.addEventListener("click", () => {
+            const track = e.querySelector(".info").firstElementChild.innerHTML.trim();
+            console.log("Playing track:", track); // Log the track being played
+            playMusic(track);
+        });
+    });
     //Play the first song
     // var audio = new Audio(songs[0])
     // audio.play()
@@ -83,19 +92,29 @@ async function main(){
     })
 }
 
-const playMusic = (track, pause = false) =>{
-    currentSong.src = "https://spotify-backend-0het.onrender.com/songs/" + encodeURIComponent(track);
-    currentSong.load();
+const playMusic = (track, pause = false) => {
+    if (!track) {
+        console.error("No track provided.");
+        return;
+    }
+
+    const encodedTrack = encodeURIComponent(track); // Encode the track name
+    currentSong.src = `https://spotify-backend-0het.onrender.com/songs/${encodedTrack}`;
+    console.log("Audio source set to:", currentSong.src); // Log the audio source
+
+    currentSong.load(); // Explicitly load the audio file
+
     currentSong.addEventListener("error", (e) => {
         console.error("Error loading audio file:", e);
     });
 
-    if(!pause){
-        currentSong.play()
-        play.src = "icons/pause.svg"
+    if (!pause) {
+        currentSong.play().catch((error) => {
+            console.error("Error playing audio:", error);
+        });
+        play.src = "icons/pause.svg";
     }
-    document.querySelector(".songinfo").innerHTML = decodeURI(track)
-    document.querySelector(".song-time").innerHTML = "00:00 / 00:00"
-    
-}
+    document.querySelector(".songinfo").innerHTML = decodeURI(track);
+    document.querySelector(".song-time").innerHTML = "00:00 / 00:00";
+};
 main()
