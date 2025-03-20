@@ -45,9 +45,21 @@ async function getSongs(folder) {
     //Attach an event listener to each song
     Array.from(document.querySelector(".song-list").getElementsByTagName("li")).forEach(e => {
         e.addEventListener("click", element => {
-            playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
-        })
-    })
+            let songNameElement = e.querySelector(".info").firstElementChild;
+            if (!songNameElement) {
+                console.error("Song name element not found!", e);
+                return;
+            }
+            let songName = songNameElement.innerHTML.trim();
+            if (!songName) {
+                console.error("Song name is empty!", e);
+                return;
+            }
+            console.log("Playing:", songName);
+            playMusic(songName);
+        });
+    });
+    
     return songs
 }
 
@@ -72,38 +84,53 @@ const playMusic = (track, pause = false) => {
     document.querySelector(".songinfo").innerHTML = decodeURI(track);
     document.querySelector(".song-time").innerHTML = "00:00 / 00:00";
 };
-
 async function displayAlbums() {
-    let a = await fetch(`https://spotify-backend-0het.onrender.com/songs`)
-    let response = await a.text(); 
-    let div = document.createElement("div")
-    div.innerHTML = response;
-    let anchors = div.getElementsByTagName("a")
-    let array = Array.from(anchors)
-    for (let index = 0; index < array.length; index++) {
-        const e = array[index];
-        if (e.href.includes('/songs')) {
-            let songsFolder = e.href.split("/").slice(-2)[0]
-            let a = await fetch(`https://spotify-backend-0het.onrender.com/songs/${songsFolder}/info.json`)
-            let response = await a.json();
-            document.querySelector('.playlist-cards').innerHTML = document.querySelector('.playlist-cards').innerHTML + `<div class="card" data-folder="${songsFolder}">
-                        <img class="m0" src="https://spotify-backend-0het.onrender.com/songs/${songsFolder}/cover.png">
+    try {
+        let a = await fetch(`https://spotify-backend-0het.onrender.com/songs`);
+        let folders = await a.json();  // ✅ Expect JSON response
+
+        if (!Array.isArray(folders)) {
+            console.error("Invalid response from server:", folders);
+            return;
+        }
+
+        let albumContainer = document.querySelector('.playlist-cards');
+        albumContainer.innerHTML = "";  // Clear existing content
+
+        for (let folder of folders) {
+            try {
+                let infoResponse = await fetch(`https://spotify-backend-0het.onrender.com/songs/${folder}/info.json`);
+                if (!infoResponse.ok) {
+                    console.warn(`Missing info.json for ${folder}`);
+                    continue;  // Skip if info.json is missing
+                }
+
+                let response = await infoResponse.json();
+                albumContainer.innerHTML += `
+                    <div class="card" data-folder="${folder}">
+                        <img class="m0" src="https://spotify-backend-0het.onrender.com/songs/${folder}/cover.png" onerror="this.src='default-cover.png'">
                         <img class="play-button" width="45" src="icons/play-button.svg">
                         <h3>${response.name}</h3>
                         <p class="color-secondary">${response.description}</p>
-                    </div>`
-
+                    </div>`;
+            } catch (error) {
+                console.error(`Error loading album ${folder}:`, error);
+            }
         }
+
+        // Add event listeners to play albums
+        document.querySelectorAll(".card").forEach(e => {
+            e.addEventListener("click", async (item) => {
+                let folder = item.currentTarget.dataset.folder;
+                let songs = await getSongs(`songs/${folder}/`);
+                if (songs.length > 0) playMusic(songs[0]);
+            });
+        });
+    } catch (error) {
+        console.error("Error fetching albums:", error);
     }
-    
-    Array.from(document.getElementsByClassName("card")).forEach(e => {
-        e.addEventListener("click", async item => {
-            let songs = await getSongs(`songs/${item.currentTarget.dataset.folder}/`);
-            playMusic(songs[0])
-            // item.dataset.folder
-        })
-    })
 }
+
 async function main() {
     // Get the list of one album song
     await getSongs("songs/Coldplay/")
