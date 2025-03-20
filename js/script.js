@@ -178,22 +178,55 @@ async function main() {
     });
 
     previous.addEventListener("click", () => {
+        if (!songs || songs.length === 0) {
+            console.error("No songs available.");
+            return;
+        }
+    
         currentSong.pause();
-        let songName = currentSong.src.split("/").pop();
-        let index = songs.indexOf(songName);
+        
+        // Extract song file name from full URL
+        let songName = decodeURIComponent(currentSong.src.split("/").pop());
+    
+        let index = songs.findIndex(song => decodeURIComponent(song) === songName);
+        
+        if (index === -1) {
+            console.error("Current song not found in list.");
+            return;
+        }
+    
         if (index - 1 >= 0) {
-            playMusic(songs[index - 1]);
+            playMusic(songs[index - 1]);  // Play previous song
+        } else {
+            console.log("No previous song.");
         }
     });
-
+    
     next.addEventListener("click", () => {
+        if (!songs || songs.length === 0) {
+            console.error("No songs available.");
+            return;
+        }
+    
         currentSong.pause();
-        let songName = currentSong.src.split("/").pop();
-        let index = songs.indexOf(songName);
+    
+        // Extract song file name from full URL
+        let songName = decodeURIComponent(currentSong.src.split("/").pop());
+    
+        let index = songs.findIndex(song => decodeURIComponent(song) === songName);
+        
+        if (index === -1) {
+            console.error("Current song not found in list.");
+            return;
+        }
+    
         if (index + 1 < songs.length) {
-            playMusic(songs[index + 1]);
+            playMusic(songs[index + 1]);  // Play next song
+        } else {
+            console.log("No next song.");
         }
     });
+    
 
     document.querySelector("#range").addEventListener("change", (e) => {
         currentSong.volume = parseInt(e.target.value) / 100
