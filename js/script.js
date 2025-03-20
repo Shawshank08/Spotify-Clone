@@ -80,7 +80,7 @@ async function displayAlbums() {
             let a = await fetch(`https://spotify-backend-0het.onrender.com/songs/${songsFolder}/info.json`)
             let response = await a.json();
             document.querySelector('.playlist-cards').innerHTML = document.querySelector('.playlist-cards').innerHTML + `<div class="card" data-folder="${songsFolder}">
-                        <img class="m0" src="songs/${songsFolder}/cover.png">
+                        <img class="m0" src="https://spotify-backend-0het.onrender.com/songs/${songsFolder}/cover.png">
                         <img class="play-button" width="45" src="icons/play-button.svg">
                         <h3>${response.name}</h3>
                         <p class="color-secondary">${response.description}</p>
