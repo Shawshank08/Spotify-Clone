@@ -60,22 +60,31 @@ const playMusic = (track, pause = false) => {
         return;
     }
 
-    // Ensure URL is formatted correctly
+    // Construct the correct song URL
     let songURL = `https://spotify-backend-0het.onrender.com/${currFolder}/${track}`;
-    songURL = songURL.replace("//", "/");  // ✅ Remove extra slashes
+
+    // Remove any double slashes (except the `https://` part)
+    songURL = songURL.replace(/([^:]\/)\/+/g, "$1");
+
     console.log("Playing song:", songURL);
 
+    // Set and load the song
     currentSong.src = songURL;
     currentSong.load();
-    
+
+    // Play the song unless paused
     if (!pause) {
-        currentSong.play();
+        currentSong.play().catch(error => {
+            console.error("Playback failed:", error);
+        });
         play.src = "icons/pause.svg";
     }
 
+    // Update UI
     document.querySelector(".songinfo").innerHTML = decodeURI(track);
     document.querySelector(".song-time").innerHTML = "00:00 / 00:00";
 };
+
 
 async function displayAlbums() {
     try {
@@ -126,7 +135,7 @@ async function displayAlbums() {
 
 async function main() {
     // Get the list of one album song
-    await getSongs("songs/Coldplay/")
+    await getSongs("songs/Arijit singh/")
     playMusic(songs[0], true)
 
     // Display Albums
