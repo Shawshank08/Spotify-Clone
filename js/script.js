@@ -56,7 +56,7 @@ const playMusic = (track, pause = false) => {
         console.error("currFolder is undefined");
         return;
     }
-    currentSong.src = `${currFolder}` + track;
+    currentSong.src = `https://spotify-backend-0het.onrender.com/${currFolder}/${track}`;
     currentSong.load();
     if (!pause) {
         currentSong.play()
