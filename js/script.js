@@ -62,7 +62,7 @@ const playMusic = (track, pause = false) => {
 }
 async function displayAlbums() {
     let a = await fetch(`songs`)
-    let response = await a.text()
+    let response = await a.json(); 
     let div = document.createElement("div")
     div.innerHTML = response;
     let anchors = div.getElementsByTagName("a")
