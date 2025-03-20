@@ -14,53 +14,44 @@ function secondsToMinuteSeconds(seconds) {
 async function getSongs(folder) {
     currFolder = folder;
     let a = await fetch(`https://spotify-backend-0het.onrender.com/${folder}`);
-    let response = await a.json();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    songs = [];
-    let as = div.getElementsByTagName("a");
-    for (let i = 0; i < as.length; i++) {
-        const element = as[i];
-        if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`${folder}`)[1]);
-        }
+    let response = await a.json(); 
+
+    if (!Array.isArray(response)) {
+        console.error("Invalid song list response:", response);
+        return [];
     }
-    console.log("Current Folder:", currFolder);
-    let songUL = document.querySelector(".song-list").getElementsByTagName("ul")[0]
-    songUL.innerHTML = ""
+
+    songs = response.filter(song => song.endsWith(".mp3"));
+    
+    console.log("Songs loaded:", songs); 
+    
+    let songUL = document.querySelector(".song-list ul");
+    songUL.innerHTML = "";
+
     for (const song of songs) {
-        songUL.innerHTML = songUL.innerHTML + `
-        <li>
+        songUL.innerHTML += `
+        <li data-song="${song}">
             <img width="20" src="icons/music.svg" class="invert">
             <div class="info">
-                <div class="f12">${song.replaceAll("%20", " ")}</div>
+                <div class="f12">${decodeURIComponent(song)}</div>
             </div>
             <div class="playnow items-center">
                 <span class="f12">Play Now</span>
                 <img width="20" class="invert" src="icons/play.svg">
             </div>
-        </li>    `;
+        </li>`;
     }
 
-    //Attach an event listener to each song
-    Array.from(document.querySelector(".song-list").getElementsByTagName("li")).forEach(e => {
-        e.addEventListener("click", element => {
-            let songNameElement = e.querySelector(".info").firstElementChild;
-            if (!songNameElement) {
-                console.error("Song name element not found!", e);
-                return;
-            }
-            let songName = songNameElement.innerHTML.trim();
-            if (!songName) {
-                console.error("Song name is empty!", e);
-                return;
-            }
+    // Attach event listeners to songs
+    document.querySelectorAll(".song-list li").forEach(li => {
+        li.addEventListener("click", () => {
+            let songName = li.dataset.song;
             console.log("Playing:", songName);
             playMusic(songName);
         });
     });
-    
-    return songs
+
+    return songs;
 }
 
 const playMusic = (track, pause = false) => {
@@ -69,21 +60,23 @@ const playMusic = (track, pause = false) => {
         return;
     }
 
-    // Ensure correct URL format (remove extra slashes)
+    // Ensure URL is formatted correctly
     let songURL = `https://spotify-backend-0het.onrender.com/${currFolder}/${track}`;
-    songURL = songURL.replace(/([^:]\/)\/+/g, "$1"); // Fix double slashes
-
+    songURL = songURL.replace("//", "/");  // ✅ Remove extra slashes
     console.log("Playing song:", songURL);
 
     currentSong.src = songURL;
     currentSong.load();
+    
     if (!pause) {
         currentSong.play();
         play.src = "icons/pause.svg";
     }
+
     document.querySelector(".songinfo").innerHTML = decodeURI(track);
     document.querySelector(".song-time").innerHTML = "00:00 / 00:00";
 };
+
 async function displayAlbums() {
     try {
         let a = await fetch(`https://spotify-backend-0het.onrender.com/songs`);
