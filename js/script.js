@@ -12,13 +12,19 @@ function secondsToMinuteSeconds(seconds) {
 }
 
 async function getSongs(folder) {
-    currFolder = folder;
-    let a = await fetch(`https://spotify-backend-0het.onrender.com/${currFolder}`)
-    let response = await a.json(); 
-    let div = document.createElement("div")
+    curFolder = folder;
+    let a = await fetch(`https://spotify-backend-0het.onrender.com/${folder}`);
+    let response = await a.text();
+    let div = document.createElement("div");
     div.innerHTML = response;
-    let as = div.getElementsByTagName("a")
-    songs = response; 
+    songs = [];
+    let as = div.getElementsByTagName("a");
+    for (let i = 0; i < as.length; i++) {
+        const element = as[i];
+        if (element.href.endsWith(".mp3")) {
+            songs.push(element.href.split(`${folder}`)[1]);
+        }
+    }
     console.log("Current Folder:", currFolder);
     let songUL = document.querySelector(".song-list").getElementsByTagName("ul")[0]
     songUL.innerHTML = ""
@@ -50,7 +56,7 @@ const playMusic = (track, pause = false) => {
         console.error("currFolder is undefined");
         return;
     }
-    currentSong.src = `https://spotify-backend-0het.onrender.com/${currFolder}/${track}`;
+    currentSong.src = `${currFolder}` + track;
     currentSong.load();
     if (!pause) {
         currentSong.play()
@@ -61,8 +67,8 @@ const playMusic = (track, pause = false) => {
 
 }
 async function displayAlbums() {
-    let a = await fetch(`songs`)
-    let response = await a.json(); 
+    let a = await fetch(`https://spotify-backend-0het.onrender.com/songs`)
+    let response = await a.text(); 
     let div = document.createElement("div")
     div.innerHTML = response;
     let anchors = div.getElementsByTagName("a")
@@ -71,7 +77,7 @@ async function displayAlbums() {
         const e = array[index];
         if (e.href.includes('/songs')) {
             let songsFolder = e.href.split("/").slice(-2)[0]
-            let a = await fetch(`songs/${songsFolder}/info.json`)
+            let a = await fetch(`https://spotify-backend-0het.onrender.com/songs/${songsFolder}/info.json`)
             let response = await a.json();
             document.querySelector('.playlist-cards').innerHTML = document.querySelector('.playlist-cards').innerHTML + `<div class="card" data-folder="${songsFolder}">
                         <img class="m0" src="songs/${songsFolder}/cover.png">
