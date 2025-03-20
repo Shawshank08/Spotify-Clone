@@ -98,8 +98,8 @@ async function displayAlbums() {
     })
 }
 async function main() {
-    // Get the list of all the songs
-    await getSongs("songs/")
+    // Get the list of one album song
+    await getSongs("songs/Coldplay/")
     playMusic(songs[0], true)
 
     // Display Albums
