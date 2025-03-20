@@ -12,7 +12,7 @@ function secondsToMinuteSeconds(seconds) {
 }
 
 async function getSongs(folder) {
-    curFolder = folder;
+    currFolder = folder;
     let a = await fetch(`https://spotify-backend-0het.onrender.com/${folder}`);
     let response = await a.text();
     let div = document.createElement("div");
