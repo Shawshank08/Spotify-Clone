@@ -52,20 +52,27 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
-    if (!currFolder) {
-        console.error("currFolder is undefined");
+    if (!currFolder || !track) {
+        console.error("currFolder or track is undefined", currFolder, track);
         return;
     }
-    currentSong.src = `https://spotify-backend-0het.onrender.com/${currFolder}/${track}`;
+
+    // Ensure correct URL format (remove extra slashes)
+    let songURL = `https://spotify-backend-0het.onrender.com/${currFolder}/${track}`;
+    songURL = songURL.replace(/([^:]\/)\/+/g, "$1"); // Fix double slashes
+
+    console.log("Playing song:", songURL);
+
+    currentSong.src = songURL;
     currentSong.load();
     if (!pause) {
-        currentSong.play()
-        play.src = "icons/pause.svg"
+        currentSong.play();
+        play.src = "icons/pause.svg";
     }
-    document.querySelector(".songinfo").innerHTML = decodeURI(track)
-    document.querySelector(".song-time").innerHTML = "00:00 / 00:00"
+    document.querySelector(".songinfo").innerHTML = decodeURI(track);
+    document.querySelector(".song-time").innerHTML = "00:00 / 00:00";
+};
 
-}
 async function displayAlbums() {
     let a = await fetch(`https://spotify-backend-0het.onrender.com/songs`)
     let response = await a.text(); 
