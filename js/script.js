@@ -183,8 +183,6 @@ async function main() {
             return;
         }
     
-        currentSong.pause();
-        
         // Extract song file name from full URL
         let songName = decodeURIComponent(currentSong.src.split("/").pop());
     
@@ -198,7 +196,8 @@ async function main() {
         if (index - 1 >= 0) {
             playMusic(songs[index - 1]);  // Play previous song
         } else {
-            console.log("No previous song.");
+            console.log("Already at the first song. Continuing playback.");
+            currentSong.play(); // Keep playing current song instead of stopping
         }
     });
     
@@ -207,8 +206,6 @@ async function main() {
             console.error("No songs available.");
             return;
         }
-    
-        currentSong.pause();
     
         // Extract song file name from full URL
         let songName = decodeURIComponent(currentSong.src.split("/").pop());
@@ -223,7 +220,8 @@ async function main() {
         if (index + 1 < songs.length) {
             playMusic(songs[index + 1]);  // Play next song
         } else {
-            console.log("No next song.");
+            console.log("Already at the last song. Continuing playback.");
+            currentSong.play(); // Keep playing current song instead of stopping
         }
     });
     
